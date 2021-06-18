@@ -33,6 +33,15 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+$routes->get('/coba', 'Coba::index');
+
+// menggunakan placeholder manipulasi
+$routes->get('/coba/index', 'Coba::index');
+$routes->get('/coba/about', 'Coba::about');
+$routes->get('/coba/(:any)', 'Coba::about/$1');
+
+// route buat admin
+$routes->get('/users', 'Admin\Users::index');
 
 /*
  * --------------------------------------------------------------------
