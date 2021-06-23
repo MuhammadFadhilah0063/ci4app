@@ -7,19 +7,26 @@
             <h1 class="mt-1">Daftar Komik</h1>
             <table class="table table-bordered table-responsive align-middle text-center">
                 <thead>
-                    <th>No.</th>
-                    <th>Sampul</th>
-                    <th>Judul</th>
-                    <th>Aksi</th>
+                    <tr>
+                        <th>No.</th>
+                        <th>Sampul</th>
+                        <th>Judul</th>
+                        <th>Aksi</th>
+                    </tr>
                 </thead>
 
                 <tbody>
-                    <td>1</td>
-                    <td><img src="/img/sampulnaruto2.jpg" class="img-responsive sampul"></td>
-                    <td>Naruto</td>
-                    <td>
-                        <a href="#" class="btn btn-success">Detail</a>
-                    </td>
+                <?php $i = 1; ?>
+                    <?php foreach($komik as $k) : ?>
+                    <tr>
+                        <td><?= $i++ ?></td>
+                        <td><img src="/img/<?= $k['sampul']; ?>" class="img-responsive sampul"></td>
+                        <td><?= $k['judul']; ?></td>
+                        <td>
+                            <a href="#" class="btn btn-success">Detail</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
