@@ -16,8 +16,15 @@
                             <p class="card-text"><b>Penulis : </b> <?= $komik['penulis'] ?></p>
                             <p class="card-text"><small class="text-muted"><b>Penerbit : </b> <?= $komik['penerbit']; ?> </small></p>
 
-                            <a href="" class="btn btn-warning">Edit</a>
-                            <a href="" class="btn btn-danger">Delete</a>
+                            <a href="/komik/edit/<?= $komik['slug'] ?>" class="btn btn-warning">Edit</a>
+
+                            <!-- HTTP Spoofing -->
+                            <form action="/komik/delete/<?= $komik['id']; ?>" method="post" class="d-inline">
+                            <?= csrf_field(); ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Anda Yakin!')">Delete</button>
+                            </form>
+
                             <br>
                             <br>
                             <a href="/komik" class="text-decoration-none ">Kembali ke daftar komik</a>
