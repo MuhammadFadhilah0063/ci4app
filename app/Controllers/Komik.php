@@ -59,10 +59,31 @@ class Komik extends BaseController
                     'is_unique' => '{field} komik sudah ada',
                     'required' => '{field} komik harus diisi'
                 ]
+            ],
+            'sampul' => [
+                'rules' => 'max_size[sampul,1048]|is_image[sampul]|mime_in[sampul,image/jpg,image/jpeg,image/png,image/jfif]',
+                'errors' => [
+                    'max_size' => 'ukuran {field} terlalu besar, max.1MB',
+                    'is_image' => '{field} yang anda pilih bukan gambar',
+                    'mime_in' => '{field} yang anda pilih bukan gambar'
+                ]
             ]
         ])) {
 
             return redirect()->to('/komik/create')->withInput();
+        }
+
+        // ambil gambar 
+        $fileSampul = $this->request->getFile('sampul');
+
+        // cek apakah tidak ada gambar, jika tidak ada gunakan gambar default
+        if ($fileSampul->getError() == 4) {
+            $namaSampul = "img.png";
+        } else {
+            // generate nama sampul random
+            $namaSampul = $fileSampul->getRandomName();
+            // pindahkan file ke folder img
+            $fileSampul->move('img', $namaSampul);
         }
 
         $slug = url_title($this->request->getVar('judul'), '-', true);
@@ -72,7 +93,7 @@ class Komik extends BaseController
             'slug' => $slug,
             'penulis' => $this->request->getVar('penulis'),
             'penerbit' => $this->request->getVar('penerbit'),
-            'sampul' => $this->request->getVar('sampul')
+            'sampul' => $namaSampul
         ]);
         
         session()->setFlashData('pesan', 'Data berhasil ditambahkan!');
@@ -82,6 +103,15 @@ class Komik extends BaseController
 
     public function delete($id)
     {
+        // Cari nama gambar berdasarkan id
+        $komik = $this->komikModel->find($id);
+
+        // cek jika nama file adalah default maka jangan hapus file sampul di img
+        if ($komik['sampul'] != 'img.png') {
+            // hapus gambar di folder img
+            unlink('img/' . $komik['sampul']);
+        }
+
         $this->komikModel->delete($id);
         session()->setFlashData('pesan', 'Data berhasil dihapus!');
         return redirect()->to('/komik');
@@ -116,10 +146,34 @@ class Komik extends BaseController
                     'is_unique' => '{field} komik sudah ada',
                     'required' => '{field} komik harus diisi'
                 ]
+            ],
+            'sampul' => [
+                'rules' => 'max_size[sampul,1048]|is_image[sampul]|mime_in[sampul,image/jpg,image/jpeg,image/png,image/jfif]',
+                'errors' => [
+                    'max_size' => 'ukuran {field} terlalu besar, max.1MB',
+                    'is_image' => '{field} yang anda pilih bukan gambar',
+                    'mime_in' => '{field} yang anda pilih bukan gambar'
+                ]
             ]
         ])) {
 
             return redirect()->to('/komik/edit/' . $this->request->getVar('slug'))->withInput();
+        }
+
+        // ambil gambar 
+        $fileSampul = $this->request->getFile('sampul');
+        $sampulLama = $this->request->getVar('sampulLama');
+
+        // cek apakah tetap gambar lama
+        if ($fileSampul->getError() == 4) {
+            $namaSampul = $sampulLama;
+        } else {
+            // generate nama sampul random
+            $namaSampul = $fileSampul->getRandomName();
+            // pindahkan file ke folder img
+            $fileSampul->move('img', $namaSampul);
+            // hapus sampul lama
+            unlink('img/' . $sampulLama);
         }
 
         $slug = url_title($this->request->getVar('judul'), '-', true);
@@ -130,7 +184,7 @@ class Komik extends BaseController
             'slug' => $slug,
             'penulis' => $this->request->getVar('penulis'),
             'penerbit' => $this->request->getVar('penerbit'),
-            'sampul' => $this->request->getVar('sampul')
+            'sampul' => $namaSampul
         ]);
 
         session()->setFlashData('pesan', 'Data berhasil diubah!');

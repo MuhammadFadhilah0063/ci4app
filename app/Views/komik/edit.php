@@ -5,10 +5,11 @@
     <div class="row">
         <div class="col-8">
             <h3 class="my-3">Form Ubah Data Komik</h3>
-            <form action="/komik/update/<?= $komik['id'] ?>" method="post">
+            <form action="/komik/update/<?= $komik['id'] ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <!-- agar proses input data hanya bisa dilakukan dihalaman ini saja -->
                 <input type="hidden" name="slug" value="<?= $komik['slug'] ?>">
+                <input type="hidden" name="sampulLama" value="<?= $komik['sampul'] ?>">
                 <div class="row mb-3">
                     <label for="judul" class="col-sm-2 col-form-label">Judul</label>
                     <div class="col-sm-10">
@@ -31,9 +32,17 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label for="sampul" class="col-sm-2 col-form-label">Sampul</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="sampul" class="form-control" id="sampul" value="<?= (old('sampul')) ? old('sampul') : $komik['sampul'] ?>">
+                    <label for="sampul" class="col-2 form-label">Sampul</label>
+                    <div class="col-9 custom-file ml-3">
+                        <input type="file" class="custom-file-input <?= ($validation->hasError('sampul')) ? 'is-invalid' : ''; ?>" id="sampul" name="sampul" onchange="previewImg()">
+                        <div class="invalid-feedback">
+                            <?= $validation->getError('sampul'); ?>
+                        </div>
+                        <label class="custom-file-label" for="sampul"><?= $komik['sampul']; ?></label>
+                    </div>
+
+                    <div class="col-sm-2 offset-5 mt-4">
+                        <img src="/img/<?= $komik['sampul']; ?>" class="img-thumbnail img-preview">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
