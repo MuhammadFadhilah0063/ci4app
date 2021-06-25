@@ -32,12 +32,12 @@
 
                 <div class="row mb-3">
                     <label for="sampul" class="col-2 form-label">Sampul</label>
-                    <div class="col-9 custom-file ml-3">
+                    <div class="col-9 custom-file ml-3 px-0">
                         <input type="file" class="custom-file-input <?= ($validation->hasError('sampul')) ? 'is-invalid' : ''; ?>" id="sampul" name="sampul" onchange="previewImg()">
-                            <div class="invalid-feedback">
-                                <?= $validation->getError('sampul'); ?>
-                            </div>
-                            <label class="custom-file-label" for="sampul">Pilih sampul...</label>
+                        <div class="invalid-feedback">
+                            <?= $validation->getError('sampul'); ?>
+                        </div>
+                        <label class="custom-file-label" for="sampul">Pilih sampul...</label>
                     </div>
 
                     <div class="col-sm-2 offset-5 mt-4">
